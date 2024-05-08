@@ -1,4 +1,4 @@
-﻿using DonationTrackingSystem.Models;
+﻿using DonationTrackingSystem.Web.ViewModel.Error;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

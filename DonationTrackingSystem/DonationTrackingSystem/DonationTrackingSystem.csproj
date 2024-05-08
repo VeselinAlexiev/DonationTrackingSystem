@@ -15,4 +15,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DonationTrackingSystem.Common\DonationTrackingSystem.Common.csproj" />
+    <ProjectReference Include="..\DonationTrackingSystem.Data.Models\DonationTrackingSystem.Data.Models.csproj" />
+    <ProjectReference Include="..\DonationTrackingSystem.Data\DonationTrackingSystem.Data.csproj" />
+    <ProjectReference Include="..\DonationTrackingSystem.Web.ViewModel\DonationTrackingSystem.Web.ViewModel.csproj" />
+  </ItemGroup>
+
 </Project>

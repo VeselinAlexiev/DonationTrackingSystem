@@ -1,4 +1,4 @@
-namespace DonationTrackingSystem.Models
+namespace DonationTrackingSystem.Web.ViewModel.Error
 {
     public class ErrorViewModel
     {
