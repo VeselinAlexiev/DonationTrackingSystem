@@ -17,4 +17,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DonationTrackingSystem.Web.ViewModel\DonationTrackingSystem.Web.ViewModel.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,18 @@
+﻿@model IEnumerable<DonationTrackingSystem.Web.ViewModel.Campaigns.Campaign>
+
+<h1>All Campaigns</h1>
+
+<div class="campaign-grid">
+    @foreach (var campaign in Model)
+    {
+        var goalPercentage = ((double)campaign.TotalAmountDonated / (double)campaign.GoalAmount) * 100;
+        <div class="campaign-box">
+            <h2>@campaign.Name</h2>
+            <p>Goal Progress: @goalPercentage.ToString("0.00")%</p>
+            <form asp-action="Details" method="get">
+                <input type="hidden" name="id" value="@campaign.Id" />
+                <button type="submit">View Details</button>
+            </form>
+        </div>
+    }
+</div>

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DonationTrackingSystem.Web.ViewModel.Donation.Donation>
+
+<h1>Donations</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Amount</th>
+            <th>Campaign</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.User</td>
+                <td>@item.Amount</td>
+                <td>@item.Campaign.Name</td>
+            </tr>
+        }
+    </tbody>
+</table>

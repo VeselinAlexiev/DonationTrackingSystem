@@ -1,8 +1,13 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h1>Welcome to the Donation Tracking System!</h1>
+
+<p>This is a simple web application for tracking and managing donations.</p>
+
+<ul>
+    <li><a asp-controller="Donations" asp-action="Create">Make Donation</a></li>
+    <li><a asp-controller="Campaigns" asp-action="All">View Available Campaigns</a></li>
+
+</ul>

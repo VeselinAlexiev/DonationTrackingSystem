@@ -1,30 +1,44 @@
-﻿namespace DonationTrackingSystem.Common
+﻿using DonationTrackingSystem.Web.ViewModel.Campaigns;
+using DonationTrackingSystem.Web.ViewModel.Donation;
+
+namespace DonationTrackingSystem.Common
 {
     public class RawData
     {
-        /*public static IEnumerable<HouseDetailsViewModel> GetHouses()
+        public static IEnumerable<Donation> GetDonations()
         {
-            return new List<HouseDetailsViewModel>()
+            return new List<Donation>()
             {
-                new HouseDetailsViewModel()
+                new Donation()
                 {
-                    Title = "House Maria",
-                    Address = "Sofia, Bulgaria",
-                    ImageUrl = "https://www.rocketmortgage.com/resources-cmsassets/RocketMortgage.com/Article_Images/Large_Images/TypesOfHomes/types-of-homes-hero.jpg"
+                    Id = 1,
+                    Amount = 10000,
+                    User = "Boyko Borissov",
+                    CampaignId = 1
                 },
-                new HouseDetailsViewModel()
+            };
+        }
+        public static IEnumerable<Campaign> GetCampaigns()
+        {
+            return new List<Campaign>()
+            {
+                new Campaign()
                 {
-                    Title = "House Emil",
-                    Address = "Burgas, Bulgaria",
-                    ImageUrl = "https://photo.barnes-international.com/annonces/bms/181/xl/733272875e7030f2ef7eb6.19188976_7dbf53b483_1920.jpg"
+                    Id = 1,
+                    Name = "GERB-SDS",
+                    Description = "Political party. The election campaign has begun. Give money so we can have more votes.",
+                    GoalAmount = 69000,
+                    TotalAmountDonated = 0,
                 },
-                new HouseDetailsViewModel()
+                new Campaign()
                 {
-                    Title = "Family House",
-                    Address = "Varna, Bulgaria",
-                    ImageUrl = "https://media1.ispdd.com/projects/big/proekt-za-kashta-Varna-R5rH4-68627028273658452.jpg"
+                    Id = 2,
+                    Name = "SoftUni Buditel",
+                    Description = "High school. Give us money because why not.",
+                    GoalAmount = 200000,
+                    TotalAmountDonated = 69000,
                 }
             };
-        }*/
+        }
     }
 }

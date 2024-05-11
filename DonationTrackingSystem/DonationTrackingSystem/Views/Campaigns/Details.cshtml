@@ -1,0 +1,21 @@
+﻿@model DonationTrackingSystem.Web.ViewModel.Campaigns.Campaign
+
+<h1>Campaign Details</h1>
+
+<dl>
+    <dt>Name:</dt>
+    <dd>@Model.Name</dd>
+
+    <dt>Description:</dt>
+    <dd>@Model.Description</dd>
+
+    <dt>Goal Amount:</dt>
+    <dd>@Model.GoalAmount$</dd>
+
+    <dt>Total Amount Donated:</dt>
+    <dd>@ViewBag.TotalDonatedAmount$</dd>
+</dl>
+
+<form asp-action="All" method="get">
+    <button type="submit">Back to All Campaigns</button>
+</form>
