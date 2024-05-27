@@ -1,71 +1,111 @@
 ﻿using DonationTrackingSystem.Common;
+using DonationTrackingSystem.Data;
+using DonationTrackingSystem.Data.Models.Donations;
 using DonationTrackingSystem.Web.ViewModel.Campaigns;
 using DonationTrackingSystem.Web.ViewModel.Donation;
 using DonationTrackingSystem.Web.ViewModel.Error;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Donation = DonationTrackingSystem.Data.Entities.Donation;
 
 namespace DonationTrackingSystem.Controllers
 {
     public class DonationsController : Controller
     {
-        /*public IActionResult My()
-        {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userDonations = RawData.GetDonations().Where(d => d.User == user).ToList();
-            var campaigns = userDonations.Select(d => d.Campaign).Distinct().ToList();
-            return View(campaigns);
-        }
+        private readonly DonationTrackingSystemDbContext _dbContext;
 
-        [HttpPost]
-        public IActionResult Donate(int campaignId, decimal amount)
+        public DonationsController(DonationTrackingSystemDbContext dbContext)
         {
-            var user = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var donation = new Donation { User = user, CampaignId = campaignId, Amount = amount };
-            return RedirectToAction(nameof(My));
+            _dbContext = dbContext;
         }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }*/
 
         public IActionResult Index()
         {
-            var donations = RawData.GetDonations();
-            return View(donations);
+            try
+            {
+                var donations = _dbContext.Donations.Include(d => d.Campaign).ToList();
+                return View(donations);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while retrieving donations.");
+            }
         }
 
         public IActionResult Create()
         {
-            var campaigns = RawData.GetCampaigns();
-
-            if (campaigns != null)
+            try
             {
-                ViewBag.Campaigns = new SelectList(campaigns, "Id", "Name");
-            }
-            else
-            {
-                ViewBag.Campaigns = new SelectList(new List<Campaign>(), "Id", "Name");
-            }
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return Redirect("/Identity/Account/Login");
+                }
 
-            return View();
+                var campaigns = _dbContext.Campaigns
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.Id.ToString(),
+                        Text = c.Name
+                    }).ToList();
+
+                var viewModel = new DonationViewModel
+                {
+                    Campaigns = campaigns
+                };
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while loading campaigns.");
+            }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("User,Amount,CampaignId")] Donation donation)
+        [Authorize]
+        public IActionResult Create([Bind("Amount,CampaignId")] DonationViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var donations = RawData.GetDonations().ToList();
-                donation.Id = donations.Count + 1;
-                donations.Add(donation);
-                return RedirectToAction(nameof(Index));
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                viewModel.DonatorId = userId;
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return Redirect("/Identity/Account/Login");
+                }
+
+                Donation donation = new Donation
+                    {
+                        DonatorId = viewModel.DonatorId,
+                        Amount = viewModel.Amount,
+                        CampaignId = viewModel.CampaignId
+                    };
+                
+                _dbContext.Add(donation);
+                    _dbContext.SaveChanges();
+
+               if (!ModelState.IsValid)
+                {
+                    foreach (var modelStateEntry in ModelState.Values)
+                    {
+                        foreach (var error in modelStateEntry.Errors)
+                        {
+                            Console.WriteLine(error.Exception);
+                        }
+                    }
+                }
+                return View(viewModel);
+
             }
-            return View(donation);
+            catch (Exception ex)
+            {
+                return StatusCode(500, "An error occurred while creating the donation.");
+            }
         }
     }
 }

@@ -1,21 +1,39 @@
-﻿@model DonationTrackingSystem.Web.ViewModel.Campaigns.Campaign
+﻿@using DonationTrackingSystem.Data.Models.Campaigns
+@model CampaignDetailsViewModel
 
-<h1>Campaign Details</h1>
+<h1>@Model.CampaignName</h1>
+<p>@Model.CampaignDescription</p>
+<p>Goal Amount: @Model.GoalAmount.ToString("C")</p>
+<p>Total Donated: @Model.TotalDonatedAmount.ToString("C")</p>
 
-<dl>
-    <dt>Name:</dt>
-    <dd>@Model.Name</dd>
+<h2>Donations</h2>
+@if (Model.Donations.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Donator Email</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var donation in Model.Donations)
+            {
+                <tr>
+                    <td>
+                        <div class="donator-id-table">
+                            @donation.DonatorName
+                        </div>
+                    </td>
+                    <td>@donation.Amount.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No donations yet.</p>
+}
 
-    <dt>Description:</dt>
-    <dd>@Model.Description</dd>
-
-    <dt>Goal Amount:</dt>
-    <dd>@Model.GoalAmount$</dd>
-
-    <dt>Total Amount Donated:</dt>
-    <dd>@ViewBag.TotalDonatedAmount$</dd>
-</dl>
-
-<form asp-action="All" method="get">
-    <button type="submit">Back to All Campaigns</button>
-</form>
+<a asp-action="All" class="btn btn-primary">Back to All Donations</a>

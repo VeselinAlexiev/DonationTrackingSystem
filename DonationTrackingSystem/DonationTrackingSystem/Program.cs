@@ -27,7 +27,7 @@ namespace DonationTrackingSystem
                 })
                 .AddEntityFrameworkStores<DonationTrackingSystemDbContext>();
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor here
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

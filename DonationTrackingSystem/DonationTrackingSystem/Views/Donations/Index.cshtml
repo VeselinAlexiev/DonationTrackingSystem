@@ -9,7 +9,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>User</th>
+            <th>Donator</th> <!-- Changed 'User' to 'Donator' assuming it refers to the person making the donation -->
             <th>Amount</th>
             <th>Campaign</th>
         </tr>
@@ -18,9 +18,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.User</td>
+                <td>@item.DonatorId</td>
                 <td>@item.Amount</td>
-                <td>@item.Campaign.Name</td>
+                <td>@item.CampaignId</td>
             </tr>
         }
     </tbody>

@@ -16,7 +16,7 @@ namespace DonationTrackingSystem.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [ForeignKey("Donator")]
         public string DonatorId { get; set; } = null!;
         public IdentityUser Donator { get; set; } = null!;
 

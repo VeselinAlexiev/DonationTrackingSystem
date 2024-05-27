@@ -9,10 +9,8 @@ namespace DonationTrackingSystem.Web.ViewModel.Donation
 {
     public class Donation
     {
-        public int Id { get; set; }
-        public string User { get; set; } = null!;
+        public string DonatorId { get; set; }
         public decimal Amount { get; set; }
         public int CampaignId { get; set; }
-        public Campaign Campaign { get; set; } = null!;
     }
 }

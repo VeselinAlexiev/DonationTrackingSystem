@@ -5,7 +5,7 @@ namespace DonationTrackingSystem.Common
 {
     public class RawData
     {
-        public static IEnumerable<Donation> GetDonations()
+        /*public static IEnumerable<Donation> GetDonations()
         {
             return new List<Donation>()
             {
@@ -39,6 +39,6 @@ namespace DonationTrackingSystem.Common
                     TotalAmountDonated = 69000,
                 }
             };
-        }
+        }*/
     }
 }
