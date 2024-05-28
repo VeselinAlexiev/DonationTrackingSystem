@@ -74,7 +74,8 @@ namespace DonationTrackingSystem.Controllers
 
             var allCampaigns = new AllViewModel()
             {
-                TotalCampaigns = this.data.Campaigns.Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString()).Count(),
+                TotalCampaigns = this.data.Campaigns
+                .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString()).Count(),
                 Campaigns = (IEnumerable<CampaignAllViewModel>)this.data.Campaigns
                     .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString())
                     .Select(c => new CampaignAllViewModel()
