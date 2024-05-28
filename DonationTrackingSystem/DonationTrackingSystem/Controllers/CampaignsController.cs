@@ -2,8 +2,11 @@
 using DonationTrackingSystem.Data;
 using DonationTrackingSystem.Data.Models.Campaigns;
 using DonationTrackingSystem.Data.Models.Donations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.WebSockets;
+using System.Security.Claims;
 
 namespace DonationTrackingSystem.Controllers
 {
@@ -62,6 +65,27 @@ namespace DonationTrackingSystem.Controllers
             };
 
             return View(campaignModel);
+        }
+
+        [Authorize]
+        public IActionResult Mine()
+        {
+            var currentUserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var allCampaigns = new AllViewModel()
+            {
+                TotalCampaigns = this.data.Campaigns.Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString()).Count(),
+                Campaigns = (IEnumerable<CampaignAllViewModel>)this.data.Campaigns
+                    .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString())
+                    .Select(c => new CampaignAllViewModel()
+                    {
+                        Id = c.Id,
+                        CampaignName = c.Name,
+                        GoalPercentage = (double)c.TotalAmountDonated / (double)c.GoalAmount * 100,
+                    })
+            };
+
+            return View(allCampaigns);
         }
     }
 }
