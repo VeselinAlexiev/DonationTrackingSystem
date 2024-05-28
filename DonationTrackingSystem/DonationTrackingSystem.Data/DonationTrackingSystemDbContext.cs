@@ -1,13 +1,9 @@
 ﻿using DonationTrackingSystem.Data.Entities;
+using DonationTrackingSystem.Data.Seeding;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Reflection.Emit;
-using DonationTrackingSystem.Data.Seeding;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
-using System.Linq;
 
 
 namespace DonationTrackingSystem.Data
@@ -69,8 +65,9 @@ namespace DonationTrackingSystem.Data
         public override int SaveChanges()
         {
             UpdateCampaignTotalAmountDonated();
-/*            SetDonatorIdForNewDonations();
-*/            return base.SaveChanges();
+            /*            SetDonatorIdForNewDonations();
+            */
+            return base.SaveChanges();
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

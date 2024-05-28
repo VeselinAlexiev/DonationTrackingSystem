@@ -1,11 +1,4 @@
-﻿using DonationTrackingSystem.Data.Entities;
-using DonationTrackingSystem.Data.Models.Campaigns;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DonationTrackingSystem.Data.Models.Donations
 {

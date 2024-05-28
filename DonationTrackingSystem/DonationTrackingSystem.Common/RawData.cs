@@ -1,7 +1,4 @@
-﻿using DonationTrackingSystem.Web.ViewModel.Campaigns;
-using DonationTrackingSystem.Web.ViewModel.Donation;
-
-namespace DonationTrackingSystem.Common
+﻿namespace DonationTrackingSystem.Common
 {
     public class RawData
     {

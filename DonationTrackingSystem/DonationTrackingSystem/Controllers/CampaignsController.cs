@@ -1,11 +1,11 @@
-﻿using DonationTrackingSystem.Common;
-using DonationTrackingSystem.Data;
+﻿using DonationTrackingSystem.Data;
+using DonationTrackingSystem.Data.Entities;
 using DonationTrackingSystem.Data.Models.Campaigns;
 using DonationTrackingSystem.Data.Models.Donations;
+using DonationTrackingSystem.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace DonationTrackingSystem.Controllers
@@ -87,6 +87,106 @@ namespace DonationTrackingSystem.Controllers
             };
 
             return View(allCampaigns);
+        }
+
+        [Authorize]
+        public IActionResult Add()
+        {
+            if (!this.data.CampaignCreators.Any(cc => cc.UserId == this.User.Id()))
+            {
+                return RedirectToAction(nameof(CampaignCreatorsController.Become), "CampaignCreators");
+            }
+            return View(new CampaignFormModel());
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Add(CampaignFormModel model)
+        {
+            if (!this.data.CampaignCreators.Any(cc => cc.UserId == this.User.Id()))
+            {
+                return RedirectToAction(nameof(CampaignCreatorsController.Become), "CampaignCreators");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var campaignCreatorsId = this.data.CampaignCreators
+                .First(cc => cc.UserId == this.User.Id())
+                .Id;
+
+            var campaign = new Campaign
+            {
+                Name = model.Name,
+                Description = model.Description,
+                GoalAmount = model.GoalAmount,
+                CampaignCreatorId = campaignCreatorsId
+            };
+
+            this.data.Campaigns.Add(campaign);
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new { id = campaign.Id });
+        }
+
+        [Authorize]
+        public IActionResult Edit(int id)
+        {
+            var campaign = this.data.Campaigns.Find(id);
+
+            if (campaign is null)
+            {
+                return BadRequest();
+            }
+
+            var campaignCreator = this.data.CampaignCreators.FirstOrDefault(cc => cc.Id == campaign.CampaignCreatorId);
+
+            if (campaignCreator?.UserId != this.User.Id())
+            {
+                return Unauthorized();
+            }
+
+            var campaignModel = new CampaignFormModel()
+            {
+                Name = campaign.Name,
+                Description = campaign.Description,
+                GoalAmount = campaign.GoalAmount,
+            };
+
+            return View(campaignModel);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Edit(int id, CampaignFormModel model)
+        {
+            var campaign = this.data.Campaigns.Find(id);
+            if (campaign is null)
+            {
+                return this.View();
+            }
+
+            var campaignCreator = this.data.CampaignCreators.FirstOrDefault(cc => cc.Id == campaign.CampaignCreatorId);
+
+            if (campaignCreator?.UserId != this.User.Id())
+            {
+                return Unauthorized();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            campaign.Name = model.Name;
+            campaign.Description = model.Description;
+            campaign.GoalAmount = model.GoalAmount;
+
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(Details), new {id = campaign.Id});
         }
     }
 }

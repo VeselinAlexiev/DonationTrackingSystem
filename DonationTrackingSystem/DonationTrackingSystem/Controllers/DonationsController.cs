@@ -1,16 +1,10 @@
-﻿using DonationTrackingSystem.Common;
-using DonationTrackingSystem.Data;
+﻿using DonationTrackingSystem.Data;
 using DonationTrackingSystem.Data.Models.Donations;
-using DonationTrackingSystem.Web.ViewModel.Campaigns;
-using DonationTrackingSystem.Web.ViewModel.Donation;
-using DonationTrackingSystem.Web.ViewModel.Error;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
 using Donation = DonationTrackingSystem.Data.Entities.Donation;
 
 namespace DonationTrackingSystem.Controllers
@@ -80,16 +74,16 @@ namespace DonationTrackingSystem.Controllers
                 }
 
                 Donation donation = new Donation
-                    {
-                        DonatorId = viewModel.DonatorId,
-                        Amount = viewModel.Amount,
-                        CampaignId = viewModel.CampaignId
-                    };
-                
-                _dbContext.Add(donation);
-                    _dbContext.SaveChanges();
+                {
+                    DonatorId = viewModel.DonatorId,
+                    Amount = viewModel.Amount,
+                    CampaignId = viewModel.CampaignId
+                };
 
-               if (!ModelState.IsValid)
+                _dbContext.Add(donation);
+                _dbContext.SaveChanges();
+
+                if (!ModelState.IsValid)
                 {
                     foreach (var modelStateEntry in ModelState.Values)
                     {
