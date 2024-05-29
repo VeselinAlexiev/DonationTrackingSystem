@@ -1,0 +1,22 @@
+﻿@using DonationTrackingSystem.Data.Models.Campaigns;
+@model CampaignAllViewModel
+
+<h1 class="text-center">Delete Campaign</h1>
+
+<form asp-action="Delete">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label asp-for="CampaignName" class="control-label"></label>
+                <input asp-for="CampaignName" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group">
+                <label asp-for="GoalPercentage" class="control-label"></label>
+                <input asp-for="GoalPercentage" class="form-control" disabled="disabled" />
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Delete" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>

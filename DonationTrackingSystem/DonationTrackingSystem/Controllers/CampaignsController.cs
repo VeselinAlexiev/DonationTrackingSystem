@@ -188,5 +188,55 @@ namespace DonationTrackingSystem.Controllers
 
             return RedirectToAction(nameof(Details), new {id = campaign.Id});
         }
+
+        [Authorize]
+        public IActionResult Delete(int id)
+        {
+            var campaign = this.data.Campaigns.Find(id);
+
+            if (campaign is null)
+            {
+                return BadRequest();
+            }
+
+            var campaignCreator = this.data.CampaignCreators.FirstOrDefault(cc => cc.Id == campaign.CampaignCreatorId);
+
+            if (campaignCreator?.UserId != this.User.Id())
+            {
+                return Unauthorized();
+            }
+
+            var model = new CampaignAllViewModel()
+            {
+                CampaignName = campaign.Name,
+                GoalPercentage = (double)campaign.TotalAmountDonated / (double)campaign.GoalAmount * 100,
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult Delete(CampaignAllViewModel model)
+        {
+            var campaign = this.data.Campaigns.Find(model.Id);
+
+            if (campaign is null) 
+            {
+                return BadRequest();
+            }
+
+            var campaignCreator = this.data.CampaignCreators.FirstOrDefault(cc => cc.Id == campaign.CampaignCreatorId);
+
+            if (campaignCreator?.UserId != this.User.Id())
+            {
+                return Unauthorized();
+            }
+
+            this.data.Campaigns.Remove(campaign);
+            this.data.SaveChanges();
+
+            return RedirectToAction(nameof(All));
+        }
     }
 }
