@@ -5,11 +5,12 @@
 <p>@Model.CampaignDescription</p>
 <p>Goal Amount: @Model.GoalAmount.ToString("C")</p>
 <p>Total Donated: @Model.TotalDonatedAmount.ToString("C")</p>
+<p>Created by (Email): @Model.CampaignCreatorName</p>
 
-<h2>Donations</h2>
-@if (Model.Donations.Any())
+<h2>Top Donations</h2>
+@if (Model.TopDonations.Any())
 {
-    <table>
+    <table class="table compact-table">
         <thead>
             <tr>
                 <th>Donator Email</th>
@@ -17,14 +18,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var donation in Model.Donations)
+            @foreach (var donation in Model.TopDonations)
             {
                 <tr>
-                    <td>
-                        <div class="donator-id-table">
-                            @donation.DonatorName
-                        </div>
-                    </td>
+                    <td>@donation.DonatorName</td>
                     <td>@donation.Amount.ToString("C")</td>
                 </tr>
             }
@@ -33,7 +30,16 @@
 }
 else
 {
-    <p>No donations yet.</p>
+    <p>No top donations yet.</p>
+}
+<br />
+@if (this.User.Identity.IsAuthenticated)
+{
+    <a asp-controller="Campaigns" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+    <a asp-controller="Campaigns" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+    <p></p>
 }
 
-<a asp-action="All" class="btn btn-primary">Back to All Donations</a>
+<a asp-controller="Campaigns" asp-action="DownloadDonations" asp-route-id="@Model.Id" class="btn btn-primary">Download All Donations</a>
+
+<a asp-action="All" class="btn btn-primary">Back to All Campaigns</a>

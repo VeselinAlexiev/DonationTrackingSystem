@@ -140,3 +140,24 @@ button {
     button:hover {
         background-color: #165BB1;
     }
+
+.compact-table {
+    width: 60%;
+    margin: auto;
+    font-size: 0.9em;
+}
+
+    .compact-table th,
+    .compact-table td {
+        padding: 5px 10px;
+    }
+
+    .compact-table th {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .compact-table td {
+        text-align: left;
+    }
+

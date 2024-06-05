@@ -3,10 +3,14 @@ using DonationTrackingSystem.Data.Entities;
 using DonationTrackingSystem.Data.Models.Campaigns;
 using DonationTrackingSystem.Data.Models.Donations;
 using DonationTrackingSystem.Infrastructure;
+using DonationTrackingSystem.Web.ViewModel;
+using DonationTrackingSystem.Web.ViewModel.Campaigns;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Text;
+using System.IO;
 
 namespace DonationTrackingSystem.Controllers
 {
@@ -17,28 +21,45 @@ namespace DonationTrackingSystem.Controllers
         public CampaignsController(DonationTrackingSystemDbContext data)
             => this.data = data;
 
-        public IActionResult All()
+        public IActionResult All([FromQuery] AllCampaignsQueryModel query)
         {
-            AllViewModel campaigns = new AllViewModel()
+            var campaignsQuery = this.data.Campaigns.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query.SearchTerm))
             {
-                TotalCampaigns = this.data.Campaigns.Count(),
-                TotalDonations = this.data.Donations.Count(),
-                Campaigns = this.data.Campaigns
-                    .Select(c => new CampaignAllViewModel()
-                    {
-                        Id = c.Id,
-                        CampaignName = c.Name,
-                        GoalPercentage = (double)c.TotalAmountDonated / (double)c.GoalAmount * 100,
-                    })
-                    .ToList()
+                campaignsQuery = campaignsQuery.Where(c =>
+                    c.Name.ToLower().Contains(query.SearchTerm.ToLower()) ||
+                    c.Description.ToLower().Contains(query.SearchTerm.ToLower()));
+            }
+
+            campaignsQuery = query.Sorting switch
+            {
+                CampaignSorting.Name => campaignsQuery.OrderBy(c => c.Name),
+                CampaignSorting.TotalAmountDonated => campaignsQuery.OrderBy(c => c.TotalAmountDonated).ThenByDescending(c => c.Id),
+                _ => campaignsQuery.OrderByDescending(c => c.Id)
             };
 
-            return View(campaigns);
+            var campaigns = campaignsQuery
+                .Skip((query.CurrentPage - 1) * AllCampaignsQueryModel.CampaignPerPage)
+                .Take(AllCampaignsQueryModel.CampaignPerPage)
+                .Select(c => new AllCampaignsModel
+                {
+                    Id = c.Id,
+                    CampaignName = c.Name,
+                    GoalPercentage = (double)c.TotalAmountDonated / (double)c.GoalAmount * 100,
+                }).ToList();
+
+            query.TotalCampaigns = campaignsQuery.Count();
+            query.Campaigns = campaigns;
+
+            return View(query);
         }
 
         public IActionResult Details(int id)
         {
             var campaign = this.data.Campaigns
+                            .Include(c => c.CampaignCreator)
+                            .ThenInclude(cc => cc.User)
                             .Include(c => c.Donations)
                             .ThenInclude(d => d.Donator)
                             .FirstOrDefault(c => c.Id == id);
@@ -48,6 +69,17 @@ namespace DonationTrackingSystem.Controllers
                 return BadRequest();
             }
 
+            var topDonations = campaign.Donations
+                                .OrderByDescending(d => d.Amount)
+                                .Take(2)
+                                .Select(d => new DonationViewModel
+                                {
+                                    Id = d.Id,
+                                    DonatorId = d.DonatorId,
+                                    DonatorName = d.Donator.Email,
+                                    Amount = d.Amount
+                                }).ToList();
+
             CampaignDetailsViewModel campaignModel = new CampaignDetailsViewModel()
             {
                 Id = campaign.Id,
@@ -55,13 +87,15 @@ namespace DonationTrackingSystem.Controllers
                 CampaignDescription = campaign.Description,
                 GoalAmount = campaign.GoalAmount,
                 TotalDonatedAmount = campaign.TotalAmountDonated,
+                CampaignCreatorName = campaign.CampaignCreator.User.Email,
                 Donations = campaign.Donations.Select(d => new DonationViewModel
                 {
                     Id = d.Id,
                     DonatorId = d.DonatorId,
                     DonatorName = d.Donator.Email,
                     Amount = d.Amount
-                }).ToList()
+                }).ToList(),
+                TopDonations = topDonations
             };
 
             return View(campaignModel);
@@ -72,13 +106,13 @@ namespace DonationTrackingSystem.Controllers
         {
             var currentUserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var allCampaigns = new AllViewModel()
+            var allCampaigns = new AllCampaignsQueryModel()
             {
                 TotalCampaigns = this.data.Campaigns
                 .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString()).Count(),
-                Campaigns = (IEnumerable<CampaignAllViewModel>)this.data.Campaigns
+                Campaigns = (IEnumerable<AllCampaignsModel>)this.data.Campaigns
                     .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString())
-                    .Select(c => new CampaignAllViewModel()
+                    .Select(c => new AllCampaignsModel()
                     {
                         Id = c.Id,
                         CampaignName = c.Name,
@@ -206,7 +240,7 @@ namespace DonationTrackingSystem.Controllers
                 return Unauthorized();
             }
 
-            var model = new CampaignAllViewModel()
+            var model = new AllCampaignsModel()
             {
                 CampaignName = campaign.Name,
                 GoalPercentage = (double)campaign.TotalAmountDonated / (double)campaign.GoalAmount * 100,
@@ -217,7 +251,7 @@ namespace DonationTrackingSystem.Controllers
 
         [HttpPost]
         [Authorize]
-        public IActionResult Delete(CampaignAllViewModel model)
+        public IActionResult Delete(AllCampaignsModel model)
         {
             var campaign = this.data.Campaigns.Find(model.Id);
 
@@ -237,6 +271,32 @@ namespace DonationTrackingSystem.Controllers
             this.data.SaveChanges();
 
             return RedirectToAction(nameof(All));
+        }
+
+        public IActionResult DownloadDonations(int id)
+        {
+            var campaign = this.data.Campaigns
+                            .Include(c => c.Donations)
+                            .ThenInclude(d => d.Donator)
+                            .FirstOrDefault(c => c.Id == id);
+
+            if (campaign == null)
+            {
+                return NotFound();
+            }
+
+            var donations = campaign.Donations.Select(d => $"{d.Donator.Email} -> {d.Amount:C}");
+
+            var sb = new StringBuilder();
+            foreach (var donation in donations)
+            {
+                sb.AppendLine(donation);
+            }
+
+            var fileName = $"Donations_{campaign.Name}.txt";
+            var fileBytes = Encoding.UTF8.GetBytes(sb.ToString());
+
+            return File(fileBytes, "text/plain", fileName);
         }
     }
 }

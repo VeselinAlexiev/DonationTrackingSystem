@@ -1,0 +1,17 @@
+﻿@using DonationTrackingSystem.Data.Models.Campaigns;
+@model AllCampaignsModel;
+
+<div class="container">
+    <div class="col-md-4">
+        <div class="card mb-3">
+]            <div class="card-body text-center">
+                <div class="campaign-box">
+                        <h2>@Model.CampaignName</h2>
+                        <p>Goal Progress: @Model.GoalPercentage.ToString("0.00")%</p>
+                        <br />
+                        <a asp-controller="Campaigns" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-success">Details</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

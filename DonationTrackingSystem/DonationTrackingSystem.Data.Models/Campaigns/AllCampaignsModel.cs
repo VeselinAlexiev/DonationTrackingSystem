@@ -1,6 +1,8 @@
-﻿namespace DonationTrackingSystem.Data.Models.Campaigns
+﻿using DonationTrackingSystem.Web.ViewModel;
+
+namespace DonationTrackingSystem.Data.Models.Campaigns
 {
-    public class CampaignAllViewModel
+    public class AllCampaignsModel
     {
         public int Id { get; set; }
         public string CampaignName { get; set; } = null!;
