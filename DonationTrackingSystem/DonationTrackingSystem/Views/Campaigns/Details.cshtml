@@ -33,7 +33,7 @@ else
     <p>No top donations yet.</p>
 }
 <br />
-@if (this.User.Identity.IsAuthenticated)
+@if (User?.Identity?.IsAuthenticated == true && Model.CampaignCreatorName == User.Identity.Name)
 {
     <a asp-controller="Campaigns" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
     <a asp-controller="Campaigns" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>

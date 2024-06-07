@@ -104,23 +104,26 @@ namespace DonationTrackingSystem.Controllers
         [Authorize]
         public IActionResult Mine()
         {
-            var currentUserId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            List<AllCampaignsModel> myCampaigns = new();
 
-            var allCampaigns = new AllCampaignsQueryModel()
+            var isCampaignCreator = this.data.CampaignCreators.Any(cc => cc.UserId == this.User.Id());
+
+            if (isCampaignCreator)
             {
-                TotalCampaigns = this.data.Campaigns
-                .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString()).Count(),
-                Campaigns = (IEnumerable<AllCampaignsModel>)this.data.Campaigns
-                    .Where(c => c.CampaignCreatorId.ToString() == currentUserId.ToString())
+                var currentCampaignCreatorId = this.data.CampaignCreators
+                    .First(cc => cc.UserId == this.User.Id()).Id;
+
+                myCampaigns = this.data
+                    .Campaigns
+                    .Where(c => c.CampaignCreatorId == currentCampaignCreatorId)
                     .Select(c => new AllCampaignsModel()
                     {
                         Id = c.Id,
                         CampaignName = c.Name,
-                        GoalPercentage = (double)c.TotalAmountDonated / (double)c.GoalAmount * 100,
-                    })
-            };
-
-            return View(allCampaigns);
+                        GoalPercentage = (double)c.TotalAmountDonated / (double)c.GoalAmount * 100
+                    }).ToList();
+            }
+            return View(myCampaigns);
         }
 
         [Authorize]

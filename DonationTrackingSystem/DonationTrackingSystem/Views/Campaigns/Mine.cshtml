@@ -1,13 +1,17 @@
 ﻿@using DonationTrackingSystem.Data.Models.Campaigns;
-@model AllCampaignsQueryModel;
+@model IEnumerable<AllCampaignsModel>;
 
 <h1>My Campaigns</h1>
 
 <div class="container">
     <div class="row">
         <div class="col-md-8">
+            @if (!Model.Any())
+            {
+                <h2 class="text-center">You have no houses yet</h2>;
+            }
             <!-- Main content (campaigns) -->
-            @foreach (var campaign in Model.Campaigns)
+            @foreach (var campaign in Model)
             {
                 <div class="campaign-box">
                     <h2>@campaign.CampaignName</h2>
@@ -18,17 +22,6 @@
                     </form>
                 </div>
             }
-        </div>
-        <div class="col-md-4">
-            <!-- Statistics box -->
-            <div class="jumbotron">
-                <div class="text-center">
-                    <h2>Statistics</h2>
-                </div>
-                <div class="text-center">
-                    <h4>Total Campaigns: @Model.TotalCampaigns</h4>
-                </div>
-            </div>
         </div>
     </div>
 </div>
