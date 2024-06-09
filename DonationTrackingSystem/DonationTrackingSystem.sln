@@ -5,13 +5,15 @@ VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationTrackingSystem", "DonationTrackingSystem\DonationTrackingSystem.csproj", "{AEB38C13-2335-4BF8-B484-F8AE10CF7278}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationTrackingSystem.Common", "DonationTrackingSystem.Common\DonationTrackingSystem.Common.csproj", "{E2233569-D501-4189-A3EA-658BC83A0192}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationTrackingSystem.Common", "DonationTrackingSystem.Common\DonationTrackingSystem.Common.csproj", "{E2233569-D501-4189-A3EA-658BC83A0192}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationTrackingSystem.Data.Models", "DonationTrackingSystem.Data.Models\DonationTrackingSystem.Data.Models.csproj", "{FB989F1A-FE87-4FBC-A39C-73EECD67C86B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationTrackingSystem.Data.Models", "DonationTrackingSystem.Data.Models\DonationTrackingSystem.Data.Models.csproj", "{FB989F1A-FE87-4FBC-A39C-73EECD67C86B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationTrackingSystem.Data", "DonationTrackingSystem.Data\DonationTrackingSystem.Data.csproj", "{B4F87F29-DC39-42A7-B317-97453FD33ACB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationTrackingSystem.Data", "DonationTrackingSystem.Data\DonationTrackingSystem.Data.csproj", "{B4F87F29-DC39-42A7-B317-97453FD33ACB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationTrackingSystem.Web.ViewModel", "DonationTrackingSystem.Web.ViewModel\DonationTrackingSystem.Web.ViewModel.csproj", "{4BE6EB2E-89E9-4B71-8AA4-7EED3434F50E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DonationTrackingSystem.Web.ViewModel", "DonationTrackingSystem.Web.ViewModel\DonationTrackingSystem.Web.ViewModel.csproj", "{4BE6EB2E-89E9-4B71-8AA4-7EED3434F50E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DonationTrackingSystem.UnitTests", "DonationTrackingSystem.UnitTests\DonationTrackingSystem.UnitTests.csproj", "{6E1CBAFA-573F-44BA-A37B-7F57A1B944B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{4BE6EB2E-89E9-4B71-8AA4-7EED3434F50E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BE6EB2E-89E9-4B71-8AA4-7EED3434F50E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BE6EB2E-89E9-4B71-8AA4-7EED3434F50E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E1CBAFA-573F-44BA-A37B-7F57A1B944B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E1CBAFA-573F-44BA-A37B-7F57A1B944B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E1CBAFA-573F-44BA-A37B-7F57A1B944B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E1CBAFA-573F-44BA-A37B-7F57A1B944B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

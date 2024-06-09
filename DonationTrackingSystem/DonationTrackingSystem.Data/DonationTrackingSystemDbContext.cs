@@ -10,11 +10,9 @@ namespace DonationTrackingSystem.Data
 {
     public class DonationTrackingSystemDbContext : IdentityDbContext
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public DonationTrackingSystemDbContext(DbContextOptions<DonationTrackingSystemDbContext> options, IHttpContextAccessor httpContextAccessor)
+        public DonationTrackingSystemDbContext(DbContextOptions<DonationTrackingSystemDbContext> options)
             : base(options)
         {
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public DbSet<Campaign> Campaigns { get; set; } = null!;
@@ -65,8 +63,6 @@ namespace DonationTrackingSystem.Data
         public override int SaveChanges()
         {
             UpdateCampaignTotalAmountDonated();
-            /*            SetDonatorIdForNewDonations();
-            */
             return base.SaveChanges();
         }
 
@@ -76,20 +72,6 @@ namespace DonationTrackingSystem.Data
             return await base.SaveChangesAsync(cancellationToken);
         }
 
-        /*private void SetDonatorIdForNewDonations()
-        {
-            var newDonations = ChangeTracker.Entries<Donation>()
-                .Where(e => e.State == EntityState.Added)
-                .Select(e => e.Entity)
-                .ToList();
-
-            foreach (var donation in newDonations)
-            {
-                // Set the DonatorId property to the authenticated user's ID
-                donation.DonatorId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            }
-        }
-*/
         private void UpdateCampaignTotalAmountDonated()
         {
             var newDonations = ChangeTracker.Entries<Donation>()
