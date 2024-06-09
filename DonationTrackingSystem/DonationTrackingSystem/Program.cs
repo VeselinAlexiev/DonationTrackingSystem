@@ -1,5 +1,6 @@
 using DonationTrackingSystem.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DonationTrackingSystem
@@ -26,7 +27,10 @@ namespace DonationTrackingSystem
                     options.Password.RequireNonAlphanumeric = false;
                 })
                 .AddEntityFrameworkStores<DonationTrackingSystemDbContext>();
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+            });
             builder.Services.AddHttpContextAccessor(); // Add HttpContextAccessor here
             var app = builder.Build();
 
