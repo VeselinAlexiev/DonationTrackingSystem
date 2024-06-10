@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DonationTrackingSystem.Controllers
 {
+    [Authorize]
     public class CampaignCreatorsController : Controller
     {
         private readonly DonationTrackingSystemDbContext data;
@@ -37,14 +38,7 @@ namespace DonationTrackingSystem.Controllers
 
             if (this.data.CampaignCreators.Any(cc => cc.Username == model.Username))
             {
-                ModelState.AddModelError(nameof(model.Username),
-                    "Username already exists. Please enter another one.");
-            }
-
-            if (this.data.Campaigns.Any(c => c.CampaignCreatorId.ToString() == this.User.Id()))
-            {
-                ModelState.AddModelError("Error",
-                    "You should have no rents to become a Campaign Creator!");
+                ModelState.AddModelError(nameof(model.Username), "Username already exists. Please enter another one.");
             }
 
             if (!ModelState.IsValid)

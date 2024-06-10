@@ -1,7 +1,7 @@
-﻿@using DonationTrackingSystem.Data.Models.CampaignCreators;
+﻿@using DonationTrackingSystem.Data.Models.CampaignCreators
 @model CampaignCreatorFormModel
 
-<h1>Become Agent</h1>
+<h1>Become Campaign Creator</h1>
 <hr />
 
 @if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"] != null)
@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form method="post">
+        <form asp-action="Become" method="post">
             <div class="form-group">
                 <label asp-for="Username"></label>
                 <input asp-for="Username" class="form-control" placeholder="Boyko Borissov">
@@ -23,7 +23,3 @@
         </form>
     </div>
 </div>
-
-@*@section Scripts{
-    <partial name= "_ValidationScriptsPartial" />
-}*@

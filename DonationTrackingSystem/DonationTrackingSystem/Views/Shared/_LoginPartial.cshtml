@@ -9,8 +9,8 @@
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Account</a>
         </li>
         <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/CampainCreators/Become" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="nav-link btn btn-link text-dark">Become Campain Creator</button>
+            <form asp-area="" asp-controller="CampaignCreators" asp-action="Become" method="get" class="form-inline">
+                <button type="submit" class="nav-link btn btn-link text-dark">Become Campaign Creator</button>
             </form>
         </li>
         <li class="nav-item">
